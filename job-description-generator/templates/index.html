@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Description Generator</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Job Description Generator</h1>
+        <form id="job-form">
+            <label for="job_title">Job Title:</label>
+            <input type="text" id="job_title" name="job_title" required>
+
+            <label for="company_name">Company Name:</label>
+            <input type="text" id="company_name" name="company_name" required>
+
+            <label for="requirements">Must-Have Requirements:</label>
+            <textarea id="requirements" name="requirements" required></textarea>
+
+            <label for="responsibilities">Responsibilities:</label>
+            <textarea id="responsibilities" name="responsibilities" required></textarea>
+
+            <label for="perks">Perks and Benefits:</label>
+            <textarea id="perks" name="perks"></textarea>
+
+            <label for="notes">Additional Notes:</label>
+            <textarea id="notes" name="notes"></textarea>
+
+            <button type="submit">Generate</button>
+        </form>
+        <div id="result">
+            <h2>Generated Job Description:</h2>
+            <p id="job-description"></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('job-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const response = await fetch('/generate', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                document.getElementById('job-description').textContent = result.description;
+            } else {
+                document.getElementById('job-description').textContent = `Error: ${result.error}`;
+            }
+        });
+    </script>
+</body>
+</html>
